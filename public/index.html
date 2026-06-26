@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeCheck — Генератор атмосферы</title>
+  <!-- Google Fonts: Outfit for logo/titles, Inter for reading texts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Ambient background glow layers -->
+  <div class="ambient-glow bg-sphere-1"></div>
+  <div class="ambient-glow bg-sphere-2"></div>
+  
+  <main class="container">
+    <header class="app-header">
+      <div class="logo-wrapper">
+        <i class="fa-solid fa-sparkles logo-sparkle"></i>
+        <h1>VibeCheck</h1>
+      </div>
+      <p id="appSubtitle" class="app-subtitle">Поделитесь вашим днём, и искусственный интеллект соберёт идеальный пастельный вайб</p>
+    </header>
+
+    <div class="app-grid">
+      <!-- Form Input Column -->
+      <section class="form-container">
+        <form id="vibeForm" class="premium-card">
+          <!-- Language Selector dropdown -->
+          <div class="lang-selector-container">
+            <label for="langSelect" id="langLabel" class="lang-label"><i class="fa-solid fa-globe"></i> Язык / Language:</label>
+            <select id="langSelect" class="lang-select">
+              <option value="ru" selected>Русский</option>
+              <option value="en">English</option>
+              <option value="kk">Қазақша</option>
+            </select>
+          </div>
+
+          <h2 id="emotionsTitleHeading" class="card-heading"><i class="fa-solid fa-heart-pulse icon-accent"></i> Ваше настроение</h2>
+          
+          <!-- Emotion Selector (Translatable via app.js data-keys) -->
+          <div class="emotions-selector">
+            <label class="feeling-pill">
+              <input type="checkbox" name="emotions" value="Уют (Cozy)">
+              <span class="feeling-label" data-key="emoCozy"><i class="fa-solid fa-couch"></i> Уют</span>
+            </label>
+            <label class="feeling-pill">
+              <input type="checkbox" name="emotions" value="Спокойствие (Chill)">
+              <span class="feeling-label" data-key="emoChill"><i class="fa-solid fa-leaf"></i> Спокойствие</span>
+            </label>
+            <label class="feeling-pill">
+              <input type="checkbox" name="emotions" value="Радость (Happy)">
+              <span class="feeling-label" data-key="emoHappy"><i class="fa-solid fa-sun-cloud"></i> Радость</span>
+            </label>
+            <label class="feeling-pill">
+              <input type="checkbox" name="emotions" value="Вдохновение (Creative)">
+              <span class="feeling-label" data-key="emoCreative"><i class="fa-solid fa-feather"></i> Творчество</span>
+            </label>
+            <label class="feeling-pill">
+              <input type="checkbox" name="emotions" value="Меланхолия (Melancholy)">
+              <span class="feeling-label" data-key="emoMelancholy"><i class="fa-solid fa-cloud-showers-heavy"></i> Меланхолия</span>
+            </label>
+            <label class="feeling-pill">
+              <input type="checkbox" name="emotions" value="Энергия (Energized)">
+              <span class="feeling-label" data-key="emoEnergized"><i class="fa-solid fa-wind-turbine"></i> Энергия</span>
+            </label>
+            <label class="feeling-pill">
+              <input type="checkbox" name="emotions" value="Мечтательность (Dreamy)">
+              <span class="feeling-label" data-key="emoDreamy"><i class="fa-solid fa-moon-stars"></i> Мечтательность</span>
+            </label>
+            <label class="feeling-pill">
+              <input type="checkbox" name="emotions" value="Усталость (Tired)">
+              <span class="feeling-label" data-key="emoTired"><i class="fa-solid fa-battery-half"></i> Усталость</span>
+            </label>
+            <label class="feeling-pill">
+              <input type="checkbox" name="emotions" value="Романтика (Romantic)">
+              <span class="feeling-label" data-key="emoRomantic"><i class="fa-solid fa-glass-water-droplet"></i> Романтика</span>
+            </label>
+          </div>
+
+          <h2 id="dayDescHeading" class="card-heading spacing-top"><i class="fa-solid fa-signature icon-accent"></i> Заметки о дне</h2>
+          <div class="textarea-container">
+            <textarea 
+              id="dayDescription" 
+              name="description" 
+              placeholder="Как проходит ваш день? Что вас порадовало или заставило задуматься? Опишите атмосферу..."
+              required
+            ></textarea>
+            <div class="input-footer">
+              <span id="charMin" class="char-indicator">Минимум 10 символов</span>
+            </div>
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn-submit">
+            <span id="submitBtnText" class="btn-text">Проверить Вайб <i class="fa-solid fa-circle-arrow-right arrow-icon"></i></span>
+            <span class="spinner-loader hidden"><i class="fa-solid fa-spinner-third fa-spin"></i></span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Output / Results Column -->
+      <section class="results-container">
+        
+        <!-- Interactive Results Box -->
+        <div id="resultBox" class="premium-card result-fade hidden">
+          
+          <div class="result-top-bar">
+            <h2 id="resultTitleHeading" class="card-heading no-margin"><i class="fa-solid fa-wand-magic icon-accent"></i> Ваш Вайб дня</h2>
+            <div id="vibeBadge" class="vibe-badge">
+              <span id="vibeColorHex">#ECE2D0</span>
+              <div id="vibeColorIndicator" class="color-dot"></div>
+            </div>
+          </div>
+
+          <!-- Wisdom Quote Card -->
+          <div class="quote-panel">
+            <i class="fa-solid fa-quote-left quote-mark"></i>
+            <div id="quoteCategory" class="quote-category">Подколы и ирония (чтобы улыбнуться)</div>
+            <p id="quoteText" class="quote-text">«Самое прекрасное в мире — это загадка...»</p>
+            <div id="quoteAuthor" class="quote-author">— Уэнсдэй Аддамс</div>
+          </div>
+
+          <!-- Movie Ticket Section (Dynamic Ticket Layout) -->
+          <div class="movie-ticket">
+            <div class="ticket-stub">
+              <div id="moviePoster" class="ticket-poster">
+                <div class="poster-overlay"><i class="fa-solid fa-ticket"></i></div>
+              </div>
+            </div>
+            <div class="ticket-content">
+              <div class="ticket-header">
+                <span id="movieTicketBadge" class="ticket-badge"><i class="fa-solid fa-film"></i> Фильм дня</span>
+                <span id="movieRating" class="rating-tag"><i class="fa-solid fa-star"></i> 8.1/10</span>
+              </div>
+              <h3 id="movieTitle" class="movie-title">Амели (2001)</h3>
+              <p id="movieDesc" class="movie-description">Удивительная история парижской мечтательницы...</p>
+              <a id="movieWatchLink" href="#" target="_blank" class="btn-watch"><i class="fa-solid fa-circle-play"></i> Смотреть бесплатно 🍿</a>
+            </div>
+          </div>
+
+          <!-- Spotify Recommendation Card (Spotify Album Edition) -->
+          <div class="spotify-playlist-card">
+            <div class="album-cover-container">
+              <img id="playerArt" class="album-cover" src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300" alt="Album Cover">
+            </div>
+            <div class="playlist-content">
+              <div class="playlist-header">
+                <span id="playlistBadge" class="playlist-badge"><i class="fa-brands fa-spotify"></i> Рекомендация Spotify</span>
+              </div>
+              <h3 id="songTrack" class="playlist-title">The Less I Know the Better</h3>
+              <h4 id="songArtist" class="playlist-artist">Tame Impala</h4>
+              <div id="playlistName" class="playlist-context">Плейлист: Late Night Drive</div>
+              <p id="songDesc" class="playlist-description">Идеальный трек под этот вечер...</p>
+              <a id="songSpotifyLink" href="#" target="_blank" class="btn-spotify-playlist"><i class="fa-brands fa-spotify"></i> Открыть в Spotify 🎧</a>
+            </div>
+          </div>
+          
+        </div>
+
+        <!-- History Card -->
+        <div class="premium-card">
+          <h2 id="historyHeading" class="card-heading"><i class="fa-solid fa-history icon-accent"></i> Карта настроений</h2>
+          <div id="historyList" class="history-list-wrapper">
+            <div id="historyPlaceholder" class="history-placeholder">Пока нет записей. Давай создадим твою первую атмосферу!</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <p id="footerText">VibeCheck — Уютный генератор атмосферы. Работает на ИИ Gemini 2.5 Flash.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
